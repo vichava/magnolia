@@ -3,7 +3,59 @@ name: pipeline
 on: [ push, workflow_dispatch ]
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - name: setup bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: install dependencies
+        shell: bash
+        run: bun i
+
+      - name: build
+        shell: bash
+        run: bun run build
+
+      - name: setup git
+        shell: bash
+        run: |
+          echo "${{ github.event_name }}"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      - name: setup bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: install dependencies
+        shell: bash
+        run: bun i
+
+      - name: test
+        shell: bash
+        run: bun run test
+
   publish:
+    needs: [ test ]
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: checkout
