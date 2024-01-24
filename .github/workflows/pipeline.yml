@@ -6,16 +6,45 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
         with:
           node-version: 21
-      - uses: oven-sh/setup-bun@v1
-      - shell: bash
+
+      - name: setup bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: create package version
+        shell: bash
+        if: ${{ github.ref != "refs/heads/master" }}
+        run: |
+          current_version=$(cat package.json | jq -r '.version')
+          current_branch_raw=$(echo $GITHUB_REF | sed 's/refs\/heads\///' | sed 's/refs\/tags\///')
+          current_branch=$(echo $current_branch_raw | sed 's/\//-/g')
+          current_commit=$(echo $GITHUB_SHA | cut -c1-8)
+
+          project_version="${current_version}-${current_branch}.${current_commit}"
+          echo $(jq ".version = \"$project_version\"" package.json) > package.json
+
+      - name: display package version
+        shell: bash
+        run: echo $(cat package.json | jq -r '.version')
+
+      - name: setup .npmrc
+        shell: bash
         env:
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
           echo "@vichava:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-      - run: bun i
-      - run: ./publish.sh
+
+      - name: install dependencies
+        shell: bash
+        run: bun i
+
+      - name: publish
+        shell: bash
+        run: ./publish.sh

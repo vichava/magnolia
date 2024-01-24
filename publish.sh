@@ -2,7 +2,7 @@
 
 # Clean
 echo "Step #Clean"
-rm -rv ./dist
+rm -rfv ./dist
 
 # Build
 echo "Step #Build"
