@@ -19,7 +19,7 @@ jobs:
 
       - name: create package version
         shell: bash
-        if: ${{ github.ref != "refs/heads/master" }}
+        if: github.ref != 'refs/heads/master'
         run: |
           current_version=$(cat package.json | jq -r '.version')
           current_branch_raw=$(echo $GITHUB_REF | sed 's/refs\/heads\///' | sed 's/refs\/tags\///')
@@ -29,7 +29,7 @@ jobs:
           project_version="${current_version}-${current_branch}.${current_commit}"
           echo $(jq ".version = \"$project_version\"" package.json) > package.json
 
-      - name: display package version
+      - name: echo package version
         shell: bash
         run: echo $(cat package.json | jq -r '.version')
 
