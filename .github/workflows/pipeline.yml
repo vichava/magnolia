@@ -1,0 +1,21 @@
+name: pipeline
+
+on: [ push, workflow_dispatch ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - uses: oven-sh/setup-bun@v1
+      - shell: bash
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          echo "@vichava:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+      - run: bun i
+      - run: ./publish.sh
