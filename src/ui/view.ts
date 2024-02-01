@@ -1,5 +1,5 @@
-import {MgNode, ChildNodeType} from "../node/mg_node";
-import {mg} from "../node/ui_node";
+import {MgNode, ChildNodeType} from "./node";
+import {mg} from "./node_type";
 
 export type PathSegments = Map<string, string>;
 

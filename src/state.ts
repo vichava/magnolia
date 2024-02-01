@@ -18,7 +18,7 @@ export function state<T>(value: T): State<T> {
  * @param fn - The mapping function to apply to the value of the state
  * @returns {State} A new state with the mapped value
  */
-export function mapped_state<T, R>(state: State<R>, fn: (value: R) => T): State<T> {
+export function map<T, R>(state: State<R>, fn: (value: R) => T): State<T> {
     return new MappedState(state, fn);
 }
 
@@ -26,12 +26,12 @@ export function mapped_state<T, R>(state: State<R>, fn: (value: R) => T): State<
  * Represents a state object that holds a value and allows for listening and updating the value.
  * @template T - The type of value held by the state object.
  */
-export class State<T> {
+export class State<V> {
 
-    private value: T;
-    private listeners: Set<StateListener<T>> = new Set();
+    private value: V;
+    private listeners: Set<StateListener<V>> = new Set();
 
-    constructor(value: T) {
+    constructor(value: V) {
         this.value = value;
     }
 
@@ -40,7 +40,7 @@ export class State<T> {
      *
      * @return The value of the current object
      */
-    public get(): T {
+    public get(): V {
         return this.value;
     }
 
@@ -50,7 +50,7 @@ export class State<T> {
      * @param value - The value to be set
      * @return {void}
      */
-    public set(value: T): void {
+    public set(value: V): void {
         this.value = value;
         for (let listener of this.listeners) {
             listener(this.value);
@@ -63,12 +63,16 @@ export class State<T> {
      * @param {StateListener} listener - The listener to bind
      * @returns {Function} - A function that, when called, removes the listener from the listeners set
      */
-    public bind(listener: StateListener<T>): () => void {
+    public bind(listener: StateListener<V>): () => void {
         this.listeners.add(listener);
 
         return (): void => {
             this.listeners.delete(listener);
         }
+    }
+
+    public map<M>(fn: (value: V) => M): MappedState<M, V> {
+        return new MappedState(this, fn);
     }
 
 }
@@ -79,14 +83,14 @@ export class State<T> {
  * @template T The type of the mapped state value
  * @template S The type of the source state value
  */
-export class MappedState<T, S> extends State<T> {
+export class MappedState<M, V> extends State<M> {
 
     private unbind_fn: (() => void) | undefined;
 
-    constructor(state: State<S>, fn: (value: S) => T) {
+    constructor(state: State<V>, fn: (value: V) => M) {
         super(fn(state.get()));
 
-        this.unbind_fn = state.bind((value: S): void => {
+        this.unbind_fn = state.bind((value: V): void => {
             this.set(fn(value));
         });
     }

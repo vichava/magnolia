@@ -1,5 +1,5 @@
 import {magnolia} from "../magnolia";
-import {MgNode} from "./mg_node";
+import {MgNode} from "./node";
 
 // WIP added on the go as needed
 

@@ -1,4 +1,4 @@
-import {data_fn, empty_data_fn, View, ViewComposeFn, ViewComposeLazyFn, ViewData} from "./view";
+import {data_fn, empty_data_fn, View, ViewComposeFn, ViewComposeLazyFn, ViewData} from "./ui/view";
 
 enum ViewTypeEnum {
     Fn = 0,

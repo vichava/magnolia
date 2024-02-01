@@ -1,4 +1,4 @@
-import {State} from "../state/state";
+import {State} from "../state";
 
 export type ChildNode = MgNode | null
 export type ChildNodeType = ChildNode | ChildNode[];

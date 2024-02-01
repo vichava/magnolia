@@ -1,5 +1,5 @@
-import {Router} from "./view/router";
-import {empty_data_fn, ViewComposeFn, ViewData} from "./view/view";
+import {Router} from "./router";
+import {empty_data_fn, ViewComposeFn, ViewData} from "./ui/view";
 
 /**
  * Represents the Magnolia application.
