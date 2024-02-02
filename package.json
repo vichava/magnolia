@@ -1,0 +1,27 @@
+{
+  "name": "@vichava/magnolia",
+  "version": "0.0.0",
+  "description": "UI library for the web",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "module": "./index.js",
+  "scripts": {
+    "test": "bun test",
+    "build": "bunx tsc",
+    "clean": "rm -rf ./dist"
+  },
+  "private": false,
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vichava/magnolia.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
+  }
+}
