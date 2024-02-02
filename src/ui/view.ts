@@ -1,4 +1,4 @@
-import {MgNode, ChildNodeType} from "./node";
+import {ChildNodeType, MgNode} from "./node";
 import {mg} from "./node_type";
 
 export type PathSegments = Map<string, string>;
@@ -23,7 +23,7 @@ export type ViewComposeLazyFn = () => Promise<{ default: ViewComposeFn }>;
  */
 export class View {
 
-    children: MgNode[] = [];
+    public children: MgNode[] = [];
 
     /**
      * Mounts the child elements of the View instance to the specified root element.
@@ -33,7 +33,7 @@ export class View {
      * @param {HTMLElement|null} ref_node - The reference node to insert the child elements before. If null, the child elements will be appended to the root element.
      * @returns {void}
      */
-    mount(
+    public mount(
         root: HTMLElement,
         ref_node: HTMLElement | null = null
     ): void {
@@ -54,7 +54,7 @@ export class View {
      *
      * @return {void}
      */
-    unmount(): void {
+    public unmount(): void {
         // Unmount and remove all children
         for (const child of this.children) {
             child.unmount()
@@ -69,7 +69,7 @@ export class View {
      * @param {ChildNodeType} node - The node to be added as a child.
      * @returns {View} - The updated view with the newly added child node.
      */
-    add_child(node: ChildNodeType): View {
+    public add_child(node: ChildNodeType): View {
         if (node === null) {
             // View must always have at least one child
             this.children.push(mg.div())

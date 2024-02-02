@@ -35,18 +35,6 @@ export class MgNode {
     }
 
     /**
-     * Mounts a child element onto the parent element.
-     *
-     * @param {MgNode} child - The child element to be mounted
-     * @protected
-     * @returns {void}
-     */
-    protected mount_child(child: MgNode): void {
-        this.children_elements.push(child);
-        child.mount(this.html_element, null);
-    }
-
-    /**
      * Mounts the element to a specified parent element at a given reference node.
      *
      * @param {HTMLElement} parent - The parent element to mount the element to
@@ -92,7 +80,7 @@ export class MgNode {
      * @param {Function} fn - The callback function to be executed.
      * @returns {MgNode} - The current MgNode instance.
      */
-    on_mount(fn: () => void): MgNode {
+    public on_mount(fn: () => void): MgNode {
         this.mount_callback_fn = fn;
         return this;
     }
@@ -103,7 +91,7 @@ export class MgNode {
      * @param {Function} fn - The function to be executed on unmount.
      * @return {MgNode} - Returns the current instance of MgNode for method chaining.
      */
-    on_unmount(fn: () => void): MgNode {
+    public on_unmount(fn: () => void): MgNode {
         this.unmount_callback_fn = fn;
         return this;
     }
@@ -113,7 +101,7 @@ export class MgNode {
      *
      * @return {void}
      */
-    unmount_children(): void {
+    public unmount_children(): void {
         for (const child of this.children_elements) {
             child.unmount();
         }
@@ -166,7 +154,7 @@ export class MgNode {
      * @param {string} text - The text to be set as the inner text of the HTML element.
      * @returns {MgNode} - The current MgNode instance.
      */
-    text(text: string): MgNode {
+    public text(text: string): MgNode {
         this.html_element.innerText = text;
         return this;
     }
@@ -177,7 +165,7 @@ export class MgNode {
      * @param {State<string>} state - The State object to bind the text with.
      * @return {MgNode} - The MgNode instance.
      */
-    bind_text(state: State<string>): MgNode {
+    public bind_text(state: State<string>): MgNode {
         this.text(state.get());
 
         state.bind((value: string): void => {
@@ -197,7 +185,7 @@ export class MgNode {
      *
      * @return {MgNode} - The modified MgNode instance with the added CSS class(es).
      */
-    style(name: string | string[]): MgNode {
+    public style(name: string | string[]): MgNode {
         if (name === undefined) {
             throw new Error(`Class name must be defined for component ${this.html_element}`);
         }
@@ -220,7 +208,7 @@ export class MgNode {
      * @param {State<string | string[]>} state - The state to bind
      * @returns {MgNode} - The MgNode object
      */
-    bind_style(state: State<string | string[]>): MgNode {
+    public bind_style(state: State<string | string[]>): MgNode {
         this.style(state.get());
 
         state.bind((value: string | string[]): void => {
@@ -236,7 +224,7 @@ export class MgNode {
      * @param {string} id - The id to be set for the HTML element
      * @returns {MgNode} - Returns the MgNode instance
      */
-    id(id: string): MgNode {
+    public id(id: string): MgNode {
         this.html_element.id = id;
         return this;
     }
@@ -247,7 +235,7 @@ export class MgNode {
      * @param {State<string>} state - The state to bind to the id property
      * @return {MgNode} - The current MgNode instance
      */
-    bind_id(state: State<string>): MgNode {
+    public bind_id(state: State<string>): MgNode {
         this.id(state.get());
 
         state.bind((value: string): void => {
@@ -255,6 +243,18 @@ export class MgNode {
         });
 
         return this;
+    }
+
+    /**
+     * Mounts a child element onto the parent element.
+     *
+     * @param {MgNode} child - The child element to be mounted
+     * @protected
+     * @returns {void}
+     */
+    protected mount_child(child: MgNode): void {
+        this.children_elements.push(child);
+        child.mount(this.html_element, null);
     }
 
 }

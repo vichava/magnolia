@@ -138,6 +138,77 @@ export class Router {
     }
 
     /**
+     * Navigates to a specified path and updates the browser history.
+     *
+     * @param {string} path - The path to navigate to
+     * @param {boolean} [replace=false] - An optional flag indicating whether to replace the current history state
+     * @returns {void}
+     */
+    public navigate(
+        path: string,
+        replace: boolean = false
+    ): void {
+        if (replace) {
+            history.replaceState({}, '', path);
+        } else {
+            history.pushState({}, '', path);
+        }
+
+        this.load(path);
+    }
+
+    /**
+     * Registers a route with the given path and view compose function.
+     *
+     * @param {string} path - The path to be routed
+     * @param {ViewComposeFn} view - The view function to be mapped to the path
+     * @return {void}
+     */
+    public route(path: string, view: ViewComposeFn): void {
+        this.routes.set(normalize_path(path), {
+            type: ViewTypeEnum.Fn,
+            fn: view
+        });
+    }
+
+    /**
+     * Registers a lazy-loaded route with the given path and view compose function.
+     *
+     * @param {string} path - The path for the route
+     * @param {ViewComposeLazyFn} view - The function that composes the lazy-loaded view
+     * @return {void}
+     */
+    public route_lazy(path: string, view: ViewComposeLazyFn): void {
+        this.routes.set(normalize_path(path), {
+            type: ViewTypeEnum.LazyFn,
+            fn: view
+        });
+    }
+
+    /**
+     * Sets the fallback view that will be used when no other view matches the path.
+     *
+     * @param {ViewComposeFn} view - The fallback view function
+     * @return {void}
+     */
+    public fallback_to(view: ViewComposeFn): void {
+        this.fallback = {
+            type: ViewTypeEnum.Fn,
+            fn: view
+        };
+    }
+
+    /**
+     * Registers a callback that will be called when the router loads a view.
+     *
+     * @param {function} fn - The callback function
+     * @returns {void}
+     */
+    public on_router_load(fn: (path: string) => void): void {
+        this.on_router_load_fn.push(fn);
+    }
+
+    /**
      * Mounts a view onto the specified path with the given data.
      *
      * @param {string} path - The path to mount the view onto
@@ -273,78 +344,6 @@ export class Router {
         }
 
         this.compose_view(path, path, view, data);
-    }
-
-
-    /**
-     * Navigates to a specified path and updates the browser history.
-     *
-     * @param {string} path - The path to navigate to
-     * @param {boolean} [replace=false] - An optional flag indicating whether to replace the current history state
-     * @returns {void}
-     */
-    public navigate(
-        path: string,
-        replace: boolean = false
-    ): void {
-        if (replace) {
-            history.replaceState({}, '', path);
-        } else {
-            history.pushState({}, '', path);
-        }
-
-        this.load(path);
-    }
-
-    /**
-     * Registers a route with the given path and view compose function.
-     *
-     * @param {string} path - The path to be routed
-     * @param {ViewComposeFn} view - The view function to be mapped to the path
-     * @return {void}
-     */
-    public route(path: string, view: ViewComposeFn): void {
-        this.routes.set(normalize_path(path), {
-            type: ViewTypeEnum.Fn,
-            fn: view
-        });
-    }
-
-    /**
-     * Registers a lazy-loaded route with the given path and view compose function.
-     *
-     * @param {string} path - The path for the route
-     * @param {ViewComposeLazyFn} view - The function that composes the lazy-loaded view
-     * @return {void}
-     */
-    public route_lazy(path: string, view: ViewComposeLazyFn): void {
-        this.routes.set(normalize_path(path), {
-            type: ViewTypeEnum.LazyFn,
-            fn: view
-        });
-    }
-
-    /**
-     * Sets the fallback view that will be used when no other view matches the path.
-     *
-     * @param {ViewComposeFn} view - The fallback view function
-     * @return {void}
-     */
-    public fallback_to(view: ViewComposeFn): void {
-        this.fallback = {
-            type: ViewTypeEnum.Fn,
-            fn: view
-        };
-    }
-
-    /**
-     * Registers a callback that will be called when the router loads a view.
-     *
-     * @param {function} fn - The callback function
-     * @returns {void}
-     */
-    public on_router_load(fn: (path: string) => void): void {
-        this.on_router_load_fn.push(fn);
     }
 
 }

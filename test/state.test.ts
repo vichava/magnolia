@@ -1,4 +1,4 @@
-import {test, expect} from "bun:test";
+import {expect, test} from "bun:test";
 import {State} from "../src/state";
 
 test("state", () => {
@@ -8,7 +8,7 @@ test("state", () => {
     expect(state.get()).toBe(0);
     expect(mapped.get()).toBe(0);
 
-    state.set(1);-
+    state.set(1);
 
     expect(state.get()).toBe(1);
     expect(mapped.get()).toBe(2);

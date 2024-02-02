@@ -39,8 +39,8 @@ export function map<T, R>(
  */
 export class State<V> {
 
-    private value: V;
     protected equals: EqualityFunction<V> | undefined = undefined;
+    private value: V;
     private listeners: Set<StateListener<V>> = new Set();
 
     constructor(
