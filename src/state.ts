@@ -25,11 +25,11 @@ export function state<T>(
  * @param equals - An optional equality function to use when comparing the mapped value
  * @returns {State} A new state with the mapped value
  */
-export function map<T, R>(
-    state: State<R>,
-    fn: (value: R) => T,
-    equals?: EqualityFunction<T>
-): State<T> {
+export function map<M, T>(
+    state: State<T>,
+    fn: (value: T) => M,
+    equals?: EqualityFunction<M>
+): State<M> {
     return new MappedState(state, fn, equals);
 }
 
@@ -37,15 +37,15 @@ export function map<T, R>(
  * Represents a state object that holds a value and allows for listening and updating the value.
  * @template T - The type of value held by the state object.
  */
-export class State<V> {
+export class State<T> {
 
-    protected equals: EqualityFunction<V> | undefined = undefined;
-    private value: V;
-    private listeners: Set<StateListener<V>> = new Set();
+    protected equals: EqualityFunction<T> | undefined = undefined;
+    private value: T;
+    private listeners: Set<StateListener<T>> = new Set();
 
     constructor(
-        value: V,
-        equals?: EqualityFunction<V>
+        value: T,
+        equals?: EqualityFunction<T>
     ) {
         this.value = value;
         this.equals = equals;
@@ -56,7 +56,7 @@ export class State<V> {
      *
      * @return The value of the current object
      */
-    public get(): V {
+    public get(): T {
         return this.value;
     }
 
@@ -66,7 +66,7 @@ export class State<V> {
      * @param value - The value to be set
      * @return {void}
      */
-    public set(value: V): void {
+    public set(value: T): void {
         let updated: boolean = this.equals === undefined ? true : !this.equals(this.value, value);
 
         if (!updated) {
@@ -86,7 +86,7 @@ export class State<V> {
      * @param {StateListener} listener - The listener to bind
      * @returns {Function} - A function that, when called, removes the listener from the listeners set
      */
-    public bind(listener: StateListener<V>): () => void {
+    public bind(listener: StateListener<T>): () => void {
         this.listeners.add(listener);
 
         return (): void => {
@@ -94,7 +94,7 @@ export class State<V> {
         }
     }
 
-    public map<M>(fn: (value: V) => M): MappedState<M, V> {
+    public map<M>(fn: (value: T) => M): MappedState<M, T> {
         return new MappedState(this, fn);
     }
 
@@ -103,21 +103,21 @@ export class State<V> {
 /**
  * Represents a mapped state that transforms the value of the source state using a provided function.
  *
- * @template T The type of the mapped state value
- * @template S The type of the source state value
+ * @template M The type of the mapped state value
+ * @template T The type of the source state value
  */
-export class MappedState<M, V> extends State<M> {
+export class MappedState<M, T> extends State<M> {
 
     private unbind_fn: (() => void) | undefined;
 
     constructor(
-        state: State<V>,
-        fn: (value: V) => M,
+        state: State<T>,
+        fn: (value: T) => M,
         equals?: EqualityFunction<M>
     ) {
         super(fn(state.get()));
 
-        this.unbind_fn = state.bind((value: V): void => {
+        this.unbind_fn = state.bind((value: T): void => {
             this.set(fn(value));
         });
 
