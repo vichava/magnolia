@@ -1,14 +1,20 @@
 export type StateListener<T> = (state: T) => void;
+export type EqualityFunction<T> = (a: T, b: T) => boolean;
 
 /**
  * Creates a new State object with the specified value.
  *
  * @template T value - The value of the State object.
+ * @param {T} value - The value of the State object.
+ * @param {EqualityFunction} equals - An optional equality function to use when comparing the value.
  *
  * @returns {State<T>} - A new State object with the specified value.
  */
-export function state<T>(value: T): State<T> {
-    return new State(value);
+export function state<T>(
+    value: T,
+    equals?: EqualityFunction<T>
+): State<T> {
+    return new State(value, equals);
 }
 
 /**
@@ -16,10 +22,15 @@ export function state<T>(value: T): State<T> {
  *
  * @param {State} state - The existing state to map
  * @param fn - The mapping function to apply to the value of the state
+ * @param equals - An optional equality function to use when comparing the mapped value
  * @returns {State} A new state with the mapped value
  */
-export function map<T, R>(state: State<R>, fn: (value: R) => T): State<T> {
-    return new MappedState(state, fn);
+export function map<T, R>(
+    state: State<R>,
+    fn: (value: R) => T,
+    equals?: EqualityFunction<T>
+): State<T> {
+    return new MappedState(state, fn, equals);
 }
 
 /**
@@ -29,10 +40,15 @@ export function map<T, R>(state: State<R>, fn: (value: R) => T): State<T> {
 export class State<V> {
 
     private value: V;
+    protected equals: EqualityFunction<V> | undefined = undefined;
     private listeners: Set<StateListener<V>> = new Set();
 
-    constructor(value: V) {
+    constructor(
+        value: V,
+        equals?: EqualityFunction<V>
+    ) {
         this.value = value;
+        this.equals = equals;
     }
 
     /**
@@ -51,7 +67,14 @@ export class State<V> {
      * @return {void}
      */
     public set(value: V): void {
+        let updated: boolean = this.equals === undefined ? true : !this.equals(this.value, value);
+
+        if (!updated) {
+            return;
+        }
+
         this.value = value;
+
         for (let listener of this.listeners) {
             listener(this.value);
         }
@@ -87,12 +110,18 @@ export class MappedState<M, V> extends State<M> {
 
     private unbind_fn: (() => void) | undefined;
 
-    constructor(state: State<V>, fn: (value: V) => M) {
+    constructor(
+        state: State<V>,
+        fn: (value: V) => M,
+        equals?: EqualityFunction<M>
+    ) {
         super(fn(state.get()));
 
         this.unbind_fn = state.bind((value: V): void => {
             this.set(fn(value));
         });
+
+        this.equals = equals;
     }
 
     /**
