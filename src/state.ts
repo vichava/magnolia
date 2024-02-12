@@ -1,4 +1,4 @@
-export type StateListener<T> = (state: T) => void;
+export type StateListener<T> = (value: T, old_value: T) => void;
 export type EqualityFunction<T> = (a: T, b: T) => boolean;
 
 /**
@@ -73,10 +73,11 @@ export class State<T> {
             return;
         }
 
+        const old_value: T = this.value;
         this.value = value;
 
         for (let listener of this.listeners) {
-            listener(this.value);
+            listener(this.value, old_value);
         }
     }
 

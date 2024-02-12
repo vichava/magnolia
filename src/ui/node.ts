@@ -205,15 +205,37 @@ export class MgNode {
     /**
      * Binds a state to the style of the MgNode.
      *
-     * @param {State<string | string[]>} state - The state to bind
+     * @param {State<string[]>} state - The state to bind
      * @returns {MgNode} - The MgNode object
      */
-    public bind_style(state: State<string | string[]>): MgNode {
+    public bind_style(state: State<string[]>): MgNode {
         this.style(state.get());
 
-        state.bind((value: string | string[]): void => {
-            this.style(value);
-        });
+        state.bind((value: string[], old_value: string[]): void => {
+            const shared_classes: string[] = [];
+            const new_classes: string[] = [];
+
+            // Split the new values into classes that are shared with the old values and classes that are not
+            for (let class_name of value) {
+                if (old_value.includes(class_name)) {
+                    shared_classes.push(class_name);
+                } else {
+                    new_classes.push(class_name);
+                }
+            }
+
+            // Clear the old classes that are not shared with the new classes
+            for (const class_name of old_value) {
+                if (shared_classes.includes(class_name)) {
+                    continue;
+                }
+
+                this.html_element.classList.remove(class_name);
+            }
+
+            // Add the new classes
+            this.style(new_classes);
+        })
 
         return this;
     }
