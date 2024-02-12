@@ -54,13 +54,13 @@ function match_dynamic_path(
     const target_segments: string[] = target.split('/');
     const contains_wildcard: boolean = target.includes(":*");
 
-    if (!contains_wildcard && path_segments.length !== target_segments.length) {
-        return [false, null];
-    }
-
     if (contains_wildcard) {
         // TODO (sebba): Implement wildcards support - we should probably match wildcards after all dynamic segments have been matched?
         throw new Error("Wildcards are not supported yet")
+    }
+
+    if (path_segments.length !== target_segments.length) {
+        return [false, null];
     }
 
     const dynamic_segments: DynamicSegment[] = [];
