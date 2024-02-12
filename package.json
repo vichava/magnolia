@@ -13,6 +13,7 @@
   "private": false,
   "dependencies": {},
   "devDependencies": {
+    "@happy-dom/global-registrator": "^13.3.8",
     "@types/bun": "latest",
     "typescript": "^5.3.3"
   },
