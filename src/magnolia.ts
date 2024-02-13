@@ -44,7 +44,6 @@ export class Magnolia {
         magnolia = this;
 
         console.debug("Magnolia#init() called");
-        console.debug(magnolia);
 
         // Get the current path
         const base: string = window.location.protocol + "//" + window.location.host;
