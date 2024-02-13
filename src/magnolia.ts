@@ -43,6 +43,8 @@ export class Magnolia {
 
         magnolia = this;
 
+        console.debug("Magnolia#init() called");
+
         // Get the current path
         const base: string = window.location.protocol + "//" + window.location.host;
         const path: string = window.location.href.replace(base, '');
