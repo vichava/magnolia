@@ -82,7 +82,3 @@ export class Magnolia {
 // This restricts the global scope to only have one instance of Magnolia
 // Is this a good idea? I honestly don't know, but it's what I'm choosing go with for now
 export let magnolia: Magnolia;
-
-export function magnolia_instance() {
-    return magnolia;
-}
