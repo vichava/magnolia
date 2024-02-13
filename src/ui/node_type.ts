@@ -49,7 +49,7 @@ export class MgRouterAnchor extends MgAnchor {
         super(url, text);
         this.html_element.onclick = (event: MouseEvent) => {
             event.preventDefault();
-            magnolia.router().navigate(url);
+            magnolia().router().navigate(url);
         }
     }
 }

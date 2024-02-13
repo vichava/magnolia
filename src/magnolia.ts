@@ -1,6 +1,20 @@
 import {Router} from "./router";
 import {empty_data_fn, ViewComposeFn, ViewData} from "./ui/view";
 
+// This restricts the global scope to only have one instance of Magnolia
+// Is this a good idea? I honestly don't know, but it's what I'm choosing go with for now
+let instance: Magnolia;
+
+/**
+ * Retrieves the instance of the Magnolia object.
+ * This function *can* return undefined if Magnolia#init() has not been called.
+ *
+ * @returns {Magnolia} The instance of the Magnolia object
+ */
+export function magnolia(): Magnolia {
+    return instance;
+}
+
 /**
  * Represents the Magnolia application.
  */
@@ -37,11 +51,11 @@ export class Magnolia {
      * @throws {Error} - If Magnolia#init() has already been called
      */
     public init(): void {
-        if (magnolia !== undefined) {
+        if (instance !== undefined) {
             throw new Error("Magnolia#init() was already called")
         }
 
-        magnolia = this;
+        instance = this;
 
         // Get the current path
         const base: string = window.location.protocol + "//" + window.location.host;
@@ -75,7 +89,3 @@ export class Magnolia {
     }
 
 }
-
-// This restricts the global scope to only have one instance of Magnolia
-// Is this a good idea? I honestly don't know, but it's what I'm choosing go with for now
-export let magnolia: Magnolia;
