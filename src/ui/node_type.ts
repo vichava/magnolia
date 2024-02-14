@@ -149,6 +149,17 @@ export class MgInput extends MgNode {
     }
 }
 
+export class MgImage extends MgNode {
+    constructor(
+        src: string,
+        alt: string
+    ) {
+        super(document.createElement('img'));
+        (this.html_element as HTMLImageElement).src = src;
+        (this.html_element as HTMLImageElement).alt = alt;
+    }
+}
+
 export namespace mg {
     export function div(): MgDiv {
         return new MgDiv();
@@ -214,6 +225,13 @@ export namespace mg {
 
     export function input(): MgInput {
         return new MgInput();
+    }
+
+    export function img(
+        src: string,
+        alt: string
+    ): MgImage {
+        return new MgImage(src, alt);
     }
 
     export function pre(): MgPre {
