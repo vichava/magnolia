@@ -1,5 +1,6 @@
 import {magnolia} from "../magnolia";
-import {MgNode} from "./node";
+import {ChildNodeType, MgNode} from "./node";
+import {View} from "./view";
 
 // WIP added on the go as needed
 
@@ -28,11 +29,15 @@ import {MgNode} from "./node";
 export class MgAnchor extends MgNode {
     constructor(
         url: string,
-        text: string
+        text?: string
     ) {
         super(document.createElement('a'));
-        this.text(text);
         this.html_element.setAttribute('href', url);
+
+
+        if (text) {
+            this.text(text);
+        }
     }
 
     open_in_new_tab(): MgAnchor {
@@ -44,7 +49,7 @@ export class MgAnchor extends MgNode {
 export class MgRouterAnchor extends MgAnchor {
     constructor(
         url: string,
-        text: string
+        text?: string
     ) {
         super(url, text);
         this.html_element.onclick = (event: MouseEvent) => {
@@ -55,14 +60,12 @@ export class MgRouterAnchor extends MgAnchor {
 }
 
 export class MgButton extends MgNode {
-    constructor(text: string) {
+    constructor(text?: string) {
         super(document.createElement('button'));
-        this.text(text);
-    }
 
-    on_click(fn: () => void): MgButton {
-        this.html_element.onclick = fn;
-        return this;
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
@@ -73,9 +76,12 @@ export class MgCanvas extends MgNode {
 }
 
 export class MgCode extends MgNode {
-    constructor(text: string) {
+    constructor(text?: string) {
         super(document.createElement('code'));
-        this.text(text);
+
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
@@ -86,16 +92,22 @@ export class MgDiv extends MgNode {
 }
 
 export class MgHeading extends MgNode {
-    constructor(level: number, text: string) {
+    constructor(level: number, text?: string) {
         super(document.createElement(`h${level}`));
-        this.text(text);
+
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
 export class MgParagraph extends MgNode {
-    constructor(text: string) {
+    constructor(text?: string) {
         super(document.createElement('p'));
-        this.text(text);
+
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
@@ -106,9 +118,12 @@ export class MgPre extends MgNode {
 }
 
 export class MgSpan extends MgNode {
-    constructor(text: string) {
+    constructor(text?: string) {
         super(document.createElement('span'));
-        this.text(text);
+
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
@@ -119,9 +134,12 @@ export class MgTable extends MgNode {
 }
 
 export class MgTableCell extends MgNode {
-    constructor(text: string) {
+    constructor(text?: string) {
         super(document.createElement('td'));
-        this.text(text);
+
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
@@ -132,9 +150,12 @@ export class MgTableRow extends MgNode {
 }
 
 export class MgTableHeadCell extends MgNode {
-    constructor(text: string) {
+    constructor(text?: string) {
         super(document.createElement('th'));
-        this.text(text);
+
+        if (text) {
+            this.text(text);
+        }
     }
 }
 
@@ -150,61 +171,65 @@ export class MgInput extends MgNode {
 }
 
 export namespace mg {
+    export function compose_view(node: ChildNodeType): View {
+        return new View().add_child(node);
+    }
+
     export function div(): MgDiv {
         return new MgDiv();
     }
 
-    export function h1(text: string): MgHeading {
+    export function h1(text?: string): MgHeading {
         return new MgHeading(1, text);
     }
 
-    export function h2(text: string): MgHeading {
+    export function h2(text?: string): MgHeading {
         return new MgHeading(2, text);
     }
 
-    export function h3(text: string): MgHeading {
+    export function h3(text?: string): MgHeading {
         return new MgHeading(3, text);
     }
 
-    export function h4(text: string): MgHeading {
+    export function h4(text?: string): MgHeading {
         return new MgHeading(4, text);
     }
 
-    export function h5(text: string): MgHeading {
+    export function h5(text?: string): MgHeading {
         return new MgHeading(5, text);
     }
 
-    export function h6(text: string): MgHeading {
+    export function h6(text?: string): MgHeading {
         return new MgHeading(6, text);
     }
 
-    export function p(text: string = ''): MgParagraph {
+    export function p(text?: string): MgParagraph {
         return new MgParagraph(text);
     }
 
-    export function span(text: string = ''): MgSpan {
+    export function span(text?: string): MgSpan {
         return new MgSpan(text);
     }
 
-    export function code(text: string = ''): MgCode {
+    export function code(text?: string): MgCode {
         return new MgCode(text);
     }
 
     export function a(
         url: string,
-        text: string
+        text?: string
     ): MgAnchor {
         return new MgAnchor(url, text);
     }
 
     export function router_a(
         url: string,
-        text: string = ''
+        text?: string
     ): MgAnchor {
         return new MgRouterAnchor(url, text);
     }
 
-    export function button(text: string): MgButton {
+    export function button(text?: string): MgButton {
         return new MgButton(text);
     }
 

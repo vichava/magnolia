@@ -279,4 +279,15 @@ export class MgNode {
         child.mount(this.html_element, null);
     }
 
+    /**
+     * Attaches a click event handler to the HTML element associated with the MgNode.
+     *
+     * @param {function(MouseEvent): any} fn - The callback function to be executed when the element is clicked.
+     * @return {MgNode} - The current MgNode object.
+     */
+    on_click(fn: (event: MouseEvent) => any): MgNode {
+        this.html_element.onclick = fn;
+        return this;
+    }
+
 }
