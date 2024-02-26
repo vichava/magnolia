@@ -1,5 +1,6 @@
 import {magnolia} from "../magnolia";
-import {MgNode} from "./node";
+import {ChildNodeType, MgNode} from "./node";
+import {View} from "./view";
 
 // WIP added on the go as needed
 
@@ -170,6 +171,10 @@ export class MgInput extends MgNode {
 }
 
 export namespace mg {
+    export function compose_view(node: ChildNodeType): View {
+        return new View().add_child(node);
+    }
+
     export function div(): MgDiv {
         return new MgDiv();
     }
