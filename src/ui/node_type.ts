@@ -59,11 +59,6 @@ export class MgButton extends MgNode {
         super(document.createElement('button'));
         this.text(text);
     }
-
-    on_click(fn: () => void): MgButton {
-        this.html_element.onclick = fn;
-        return this;
-    }
 }
 
 export class MgCanvas extends MgNode {
