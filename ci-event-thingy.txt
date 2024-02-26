@@ -1,0 +1,4 @@
+# This file is used to make a meaningless change to the repository to trigger a build on GitHub Actions
+# Why? Because sometimes they just don't trigger on push... As always thanks M$, you somehow make shit worse every year
+
+counter=1
